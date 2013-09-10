@@ -21,6 +21,7 @@ public class H2Server {
 	try {
 	    System.out.println("正在启动h2...");
 	    System.setProperty("h2.bindAddress", "127.0.0.1") ;
+	    System.out.println("设置h2.bindAddress为 ： "+"127.0.0.1");
 	    server = Server.createTcpServer(new String[] { "-tcpPort", Config.dbPort }).start();
 	} catch (SQLException e) {
 	    System.out.println("启动h2出错：" + e.toString());
