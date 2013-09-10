@@ -1,13 +1,16 @@
 package com.ponxu.blog4j.database;
 
+import java.net.InetAddress;
+import java.net.InterfaceAddress;
+import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.apache.log4j.MDC;
 import org.h2.tools.Server;
+import org.h2.util.Utils;
 
 import com.ponxu.blog4j.Config;
 
@@ -17,6 +20,8 @@ public class H2Server {
     public void startServer() {
 	try {
 	    System.out.println("正在启动h2...");
+	    System.setProperty("h2.bindAddress", "127.0.0.1") ;
+	    System.out.println("设置h2.bindAddress为 ： "+"127.0.0.1");
 	    server = Server.createTcpServer(new String[] { "-tcpPort", Config.dbPort }).start();
 	} catch (SQLException e) {
 	    System.out.println("启动h2出错：" + e.toString());
@@ -56,8 +61,7 @@ public class H2Server {
 	}
     }
 
-    public static void main(String[] args) {
-	
-	
+    public static void main(String[] args) throws UnknownHostException {
+	new H2Server().startServer();
     }
 }

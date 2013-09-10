@@ -1,0 +1,9 @@
+09-10 14:05:40 jdbc[2]: exception
+org.h2.jdbc.JdbcSQLException: Table "BJ_POST" not found; SQL statement:
+select count(*) from bj_post where  type='post' and status='publish' limit 0,1 [42102-173]
+09-10 14:05:48 jdbc[2]: exception
+org.h2.jdbc.JdbcSQLException: Table "BJ_SETTING" not found; SQL statement:
+select count(*) from bj_setting limit 0,1 [42102-173]
+09-10 14:06:14 jdbc[2]: exception
+org.h2.jdbc.JdbcSQLException: Table "BJ_SETTING" not found; SQL statement:
+select count(*) from bj_setting limit 0,1 [42102-173]
