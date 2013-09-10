@@ -45,6 +45,11 @@ public class Config {
 	    pageSize = BeanUtils.cast(prop.getProperty("page_size", "15"), int.class);
 	    cache = BeanUtils.cast(prop.getProperty("cache", "false"), Boolean.class);
 	    sublength = BeanUtils.cast(prop.getProperty("sublength", "500"), int.class);
+	    
+	    dbDir = prop.getProperty("dbDir", "./h2db/sample");
+	    dbPort = prop.getProperty("dbDir", "9080");
+	    dbUser = prop.getProperty("dbDir", "ansj");;
+	    dbPassword = prop.getProperty("dbDir", "wysxzw");;
 
 	    in.close();
 	} catch (IOException e) {
