@@ -47,9 +47,9 @@ public class Config {
 	    sublength = BeanUtils.cast(prop.getProperty("sublength", "500"), int.class);
 	    
 	    dbDir = prop.getProperty("dbDir", "./h2db/sample");
-	    dbPort = prop.getProperty("dbDir", "9080");
-	    dbUser = prop.getProperty("dbDir", "ansj");;
-	    dbPassword = prop.getProperty("dbDir", "wysxzw");;
+	    dbPort = prop.getProperty("dbPort", "9080");
+	    dbUser = prop.getProperty("dbUser", "ansj");;
+	    dbPassword = prop.getProperty("dbPassword", "wysxzw");;
 
 	    in.close();
 	} catch (IOException e) {
