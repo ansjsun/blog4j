@@ -14,7 +14,7 @@
 			<label for="wmd-input">内容</label>
 			<div id="wmd-editor" class="wmd-panel rbox">
 				<div id="wmd-button-bar"></div>
-				<textarea id="wmd-input" name="content" placeholder="在这里尽情书写吧...">${post.content!}</textarea>
+				<textarea id="markdown" name="content" placeholder="在这里尽情书写吧...">${post.content!}</textarea>
 			</div>
 			<div id="wmd-preview" class="wmd-panel"></div>
 			<div id="wmd-output" class="wmd-panel"></div>
@@ -65,14 +65,21 @@
 	
 </form>
 
-<link rel="stylesheet" type="text/css" href="${adminPath}/js/markdown/wmd.css" />
+
+<link rel="stylesheet" type="text/css" href="${adminPath}/js/markitup/skins/markitup/style.css" />
+<link rel="stylesheet" type="text/css" href="${adminPath}/js/markitup/sets/markdown/style.css" />
 
 <script type="text/javascript" src="http://lib.sinaapp.com/js/jquery/1.7.2/jquery.min.js"></script>
-<script type="text/javascript" src="${adminPath}/js/markdown/wmd.js"></script>
-<script type="text/javascript" src="${adminPath}/js/markdown/showdown.js"></script>
-<script type="text/javascript" src="${adminPath}/js/wmd-pack.js"></script>
-<script type="text/javascript" src="${adminPath}/js/jquery.upload.js"></script>
-<script type="text/javascript">
+
+<script type="text/javascript" src="${adminPath}/js/markitup/jquery.markitup.js"></script>
+<script type="text/javascript" src="${adminPath}/js/markitup/sets/markdown/set.js"></script>
+
+<script language="javascript">
+$(document).ready(function()	{
+    $('#markdown').markItUp(myMarkdownSettings);
+});
+
+
 convertHTMLWhenSubmit = false;
 WEB_ROOT = "${ctxPath}";
 
