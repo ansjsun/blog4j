@@ -4,25 +4,47 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.nutz.dao.entity.annotation.Column;
+import org.nutz.dao.entity.annotation.Id;
+import org.nutz.dao.entity.annotation.ManyMany;
+import org.nutz.dao.entity.annotation.Table;
+
 import com.petebevin.markdown.MarkdownProcessor;
-import com.ponxu.blog4j.service.IPostService;
 
 /**
  * 文章
  * 
  * @author xwz
  */
+@Table("bj_post")
 public class Post implements java.io.Serializable {
 	private static final long serialVersionUID = -7679909637903047354L;
-	
+
+	public static final String STATUS_DRAFT = "draft";
+	public static final String STATUS_PUBLISH = "publish";
+	public static final String STATUS_PRIVATE = "private";
+
+	// 类型
+	public static final String TYPE_POST = "post";
+	public static final String TYPE_PAGE = "page";
+
+	@Id
 	private int id;
-	private String url = "";
-	private String title = "";
-	private String content = "";
+	@Column
+	private String url;
+	@Column
+	private String title;
+	@Column
+	private String content;
+	@Column
 	private Date addtime;
+	@Column
 	private int top;
-	private String status = IPostService.STATUS_PUBLISH;
-	private String type = IPostService.TYPE_POST;
+	@Column
+	private String status = STATUS_PUBLISH;
+	@Column
+	private String type = TYPE_POST;
+	@ManyMany(target = Tag.class, relation = "bj_post_tag", from = "post_id", to = "tag_id")
 	private Set<Tag> tags = new HashSet<Tag>();
 
 	public int getId() {
@@ -96,15 +118,13 @@ public class Post implements java.io.Serializable {
 	public void setAddtime(Date addtime) {
 		this.addtime = addtime;
 	}
-	
+
 	public String getContentHtml() {
 		return new MarkdownProcessor().markdown(content);
 	}
 
 	@Override
 	public String toString() {
-		return "Post [id=" + id + ", url=" + url + ", title=" + title
-				+ ", content=" + content + ", top=" + top + ", status="
-				+ status + ", type=" + type + "]";
+		return "Post [id=" + id + ", url=" + url + ", title=" + title + ", content=" + content + ", top=" + top + ", status=" + status + ", type=" + type + "]";
 	}
 }

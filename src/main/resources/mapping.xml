@@ -7,6 +7,8 @@
 	<handler name="search" url="/search" />
 	<handler name="searchByTag" url="/tag/(\d+)" />
 	
+	<handler name="markDown" url="/markDown" />
+	
 	<!-- ============ admin ============================== -->
 	<handler name="login" url="/admin" />
 	<handler name="login" url="/admin/login" />

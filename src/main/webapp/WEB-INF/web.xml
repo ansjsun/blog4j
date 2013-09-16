@@ -8,51 +8,17 @@
 		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
 
-	<!-- ioc加载 -->	<context-param>
-		<param-name>xml</param-name>
-		<param-value>beans.xml</param-value>
-	</context-param>
-	<context-param>
-		<param-name>package</param-name>
-		<param-value>
-			com.ponxu.blog4j.service,
-			com.ponxu.blog4j.web
-		</param-value>
-	</context-param>
-	<listener>
-		<listener-class>com.ponxu.run.web.BeanLoaderListener</listener-class>
-	</listener>
-	
-	<!-- Blog -->
-	<filter>
-		<filter-name>Blog</filter-name>
-		<filter-class>com.ponxu.blog4j.web.BlogFilter</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>Blog</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
 
-	<!-- MVC -->
 	<filter>
-		<filter-name>MVC</filter-name>
-		<filter-class>com.ponxu.run.web.RequestFilter</filter-class>
+		<filter-name>nutz</filter-name>
+		<filter-class>org.nutz.mvc.NutFilter</filter-class>
 		<init-param>
-			<param-name>handlerFactory</param-name>
-			<param-value></param-value>
+			<param-name>modules</param-name>
+			<param-value>com.ponxu.blog4j.Config</param-value>
 		</init-param>
 		<init-param>
-			<param-name>handlerMapping</param-name>
-			<param-value>mapping.xml</param-value>
-		</init-param>
-		<init-param>
-			<param-name>handlerPackage</param-name>
-			<param-value>com.ponxu.blog4j.web</param-value>
+			<param-name>ignore</param-name>
+			<param-value>^(.+[.])(jsp|png|gif|jpg|js|css|jspx|jpeg|html)$</param-value>
 		</init-param>
 	</filter>
-	<filter-mapping>
-		<filter-name>MVC</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-
 </web-app>

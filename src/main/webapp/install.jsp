@@ -55,8 +55,8 @@
 
 			DAO.execute("insert into bj_setting values('title','标题','" + title + "');");
 			DAO.execute("insert into bj_setting values('subtitle','子标题','" + subtitle + "');");
-			DAO.execute("insert into bj_setting values('loginname','登录用户名','" + loginname + "');");
-			DAO.execute("insert into bj_setting values('loginpassword','登录密码','" + MD5Util.MD5(loginpassword) + "');");
+			DAO.execute("insert into bj_setting values('username','登录用户名','" + loginname + "');");
+			DAO.execute("insert into bj_setting values('password','登录密码','" + MD5Util.MD5(loginpassword) + "');");
 			DAO.execute("insert into bj_setting values('analyticscode','统计代码','" + analyticscode + "');");
 			DAO.execute("insert into bj_setting values('commentcode','评论代码','" + commentcode + "');");
 
