@@ -7,16 +7,15 @@ import org.nutz.castor.Castors;
 import org.nutz.dao.Chain;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Condition;
-import org.nutz.dao.Dao;
 import org.nutz.dao.Sqls;
 import org.nutz.dao.entity.Entity;
 import org.nutz.dao.entity.MappingField;
 import org.nutz.dao.entity.Record;
+import org.nutz.dao.impl.NutDao;
 import org.nutz.dao.pager.Pager;
 import org.nutz.dao.sql.Sql;
 import org.nutz.dao.util.cri.SqlExpression;
 import org.nutz.dao.util.cri.SqlExpressionGroup;
-import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 
 /**
@@ -25,10 +24,7 @@ import org.nutz.ioc.loader.annotation.IocBean;
  * @author ansj
  */
 @IocBean
-public class BasicDao {
-
-	@Inject
-	protected Dao dao;
+public class BasicDao extends NutDao {
 
 	/**
 	 * 根据Id删除数据
@@ -39,7 +35,7 @@ public class BasicDao {
 	 * @return true 成功删除一条数据,false删除失败
 	 */
 	public <T> boolean delById(int id, Class<T> c) {
-		return dao.delete(c, id) == 1;
+		return this.delete(c, id) == 1;
 	}
 
 	/**
@@ -53,7 +49,7 @@ public class BasicDao {
 	 * @return 查询到的对象
 	 */
 	public <T> T find(int id, Class<T> c) {
-		return dao.fetch(c, id);
+		return this.fetch(c, id);
 	}
 
 	/**
@@ -67,7 +63,7 @@ public class BasicDao {
 	 * @return List
 	 */
 	public <T> List<T> search(Class<T> c, String orderby) {
-		return dao.query(c, Cnd.orderBy().desc(orderby), null);
+		return this.query(c, Cnd.orderBy().desc(orderby), null);
 
 	}
 
@@ -80,7 +76,7 @@ public class BasicDao {
 	 * @return
 	 */
 	public <T> List<T> search(Class<T> c, Condition condition) {
-		return dao.query(c, condition, null);
+		return this.query(c, condition, null);
 
 	}
 
@@ -99,13 +95,13 @@ public class BasicDao {
 	 * @return List
 	 */
 	public <T> List<T> searchByPage(Class<T> c, int currentPage, int pageSize, String orderby) {
-		Pager pager = dao.createPager(currentPage, pageSize);
-		return dao.query(c, Cnd.orderBy().desc(orderby), pager);
+		Pager pager = this.createPager(currentPage, pageSize);
+		return this.query(c, Cnd.orderBy().desc(orderby), pager);
 	}
 
 	public <T> List<T> getPage(Class<T> c, int currentPage, int pageSize, String orderby) {
-		Pager pager = dao.createPager(currentPage, pageSize);
-		List<T> list = dao.query(c, Cnd.orderBy().desc(orderby), pager);
+		Pager pager = this.createPager(currentPage, pageSize);
+		List<T> list = this.query(c, Cnd.orderBy().desc(orderby), pager);
 		return list;
 	}
 
@@ -124,36 +120,8 @@ public class BasicDao {
 	 * @return List
 	 */
 	public <T> List<T> searchByPage(Class<T> c, Condition condition, int currentPage, int pageSize) {
-		Pager pager = dao.createPager(currentPage, pageSize);
-		return dao.query(c, condition, pager);
-	}
-
-	/**
-	 * 修改一条数据
-	 * 
-	 * @param <T>
-	 * @param t
-	 *            修改数据库中的数据
-	 * @return true 修改成功,false 修改失败
-	 */
-	public <T> boolean update(T t) {
-		return dao.updateIgnoreNull(t) == 1;
-	}
-
-	/**
-	 * 根据条件修改指定数据
-	 * 
-	 * @param <T>
-	 * @param c
-	 *            数据库表
-	 * @param chain
-	 *            修改的内容
-	 * @param condition
-	 *            选择条件
-	 * @return true 成功,false失败
-	 */
-	public <T> boolean update(Class<T> c, Chain chain, Condition condition) {
-		return dao.update(c, chain, condition) > 0;
+		Pager pager = this.createPager(currentPage, pageSize);
+		return this.query(c, condition, pager);
 	}
 
 	/**
@@ -164,11 +132,11 @@ public class BasicDao {
 	 * @return 返回增加到数据库的这条数据
 	 */
 	public <T> T save(T t) {
-		return dao.insert(t);
+		return this.insert(t);
 	}
 
 	public void save(String table, Chain chain) {
-		dao.insert(table, chain);
+		this.insert(table, chain);
 	}
 
 	/**
@@ -180,7 +148,7 @@ public class BasicDao {
 	 * @return int
 	 */
 	public <T> int searchCount(Class<T> c) {
-		return dao.count(c);
+		return this.count(c);
 	}
 
 	/**
@@ -194,7 +162,7 @@ public class BasicDao {
 	 * @return int
 	 */
 	public <T> int searchCount(Class<T> c, Condition condition) {
-		return dao.count(c, condition);
+		return this.count(c, condition);
 	}
 
 	/**
@@ -228,13 +196,13 @@ public class BasicDao {
 	 * @return List
 	 */
 	public <T> List<T> searchByIds(Class<T> c, String ids, String orderby) {
-		Entity<T> entity = dao.getEntity(c);
+		Entity<T> entity = this.getEntity(c);
 
 		String id = entity.getIdField().getColumnName();
 
 		String sql = " " + id + " in (" + ids + ") order by " + orderby + " desc";
 
-		return dao.query(c, Cnd.wrap(sql), null);
+		return this.query(c, Cnd.wrap(sql), null);
 
 	}
 
@@ -249,11 +217,11 @@ public class BasicDao {
 	 * @return List
 	 */
 	public <T> List<T> searchByIds(Class<T> c, int[] ids, String orderby) {
-		Entity<T> entity = dao.getEntity(c);
+		Entity<T> entity = this.getEntity(c);
 
 		String id = entity.getIdField().getColumnName();
 
-		return dao.query(c, Cnd.where(id, "in", ids).desc(orderby), null);
+		return this.query(c, Cnd.where(id, "in", ids).desc(orderby), null);
 
 	}
 
@@ -268,7 +236,7 @@ public class BasicDao {
 	 * @return true 成功,false 失败
 	 */
 	public <T> void deleteByIds(Class<T> c, String ids) {
-		Entity<T> entity = dao.getEntity(c);
+		Entity<T> entity = this.getEntity(c);
 
 		String table = entity.getTableName();
 
@@ -276,7 +244,7 @@ public class BasicDao {
 
 		Sql sql = Sqls.create("delete from " + table + " where " + id + " in(" + ids + ")");
 
-		dao.execute(sql);
+		this.execute(sql);
 	}
 
 	/**
@@ -288,7 +256,7 @@ public class BasicDao {
 	 * @return T
 	 */
 	public <T> T findByCondition(Class<T> c, Condition condition) {
-		return dao.fetch(c, condition);
+		return this.fetch(c, condition);
 	}
 
 	/**
@@ -308,7 +276,7 @@ public class BasicDao {
 	 * @return List
 	 */
 	public <T> List<T> searchPageByLike(Class<T> c, String value, String orderby, int currentPage, int pageSize) {
-		Entity<T> entity = dao.getEntity(c);
+		Entity<T> entity = this.getEntity(c);
 
 		List<MappingField> fields = entity.getMappingFields();
 
@@ -325,9 +293,9 @@ public class BasicDao {
 			}
 		}
 
-		Pager pager = dao.createPager(currentPage, pageSize);
+		Pager pager = this.createPager(currentPage, pageSize);
 
-		return dao.query(c, Cnd.where(group).desc(orderby), pager);
+		return this.query(c, Cnd.where(group).desc(orderby), pager);
 	}
 
 	/**
@@ -347,7 +315,7 @@ public class BasicDao {
 	 * @return List
 	 */
 	public <T> int searchPageByLike(Class<T> c, String value) {
-		Entity<T> entity = dao.getEntity(c);
+		Entity<T> entity = this.getEntity(c);
 		List<MappingField> fields = entity.getMappingFields();
 		SqlExpressionGroup group = null;
 		for (MappingField f : fields) {
@@ -361,7 +329,7 @@ public class BasicDao {
 			}
 		}
 
-		return dao.count(c, Cnd.where(group));
+		return this.count(c, Cnd.where(group));
 	}
 
 	/**
@@ -381,13 +349,13 @@ public class BasicDao {
 	 * @return List
 	 */
 	public <T> List<T> searchByPageLike(Class<T> c, String fieldName, String value, int currentPage, int pageSize) {
-		Entity<T> entity = dao.getEntity(c);
+		Entity<T> entity = this.getEntity(c);
 
 		String column = entity.getField(fieldName).getColumnName();
 
-		Pager pager = dao.createPager(currentPage, pageSize);
+		Pager pager = this.createPager(currentPage, pageSize);
 
-		return dao.query(c, Cnd.where(column, "LIKE", "%" + value + "%"), pager);
+		return this.query(c, Cnd.where(column, "LIKE", "%" + value + "%"), pager);
 
 	}
 
@@ -408,11 +376,11 @@ public class BasicDao {
 	 * @return List
 	 */
 	public <T> int searchByPageLike(Class<T> c, String fieldName, String value) {
-		Entity<T> entity = dao.getEntity(c);
+		Entity<T> entity = this.getEntity(c);
 
 		String column = entity.getField(fieldName).getColumnName();
 
-		return dao.count(c, Cnd.where(column, "LIKE", "%" + value + "%"));
+		return this.count(c, Cnd.where(column, "LIKE", "%" + value + "%"));
 
 	}
 
@@ -433,12 +401,12 @@ public class BasicDao {
 	 * @return List
 	 */
 	public <T> List<T> searchByPage(Class<T> c, String fieldName, String value, int currentPage, int pageSize) {
-		Entity<T> entity = dao.getEntity(c);
+		Entity<T> entity = this.getEntity(c);
 
 		String column = entity.getField(fieldName).getColumnName();
 
-		Pager pager = dao.createPager(currentPage, pageSize);
-		return dao.query(c, Cnd.where(column, "=", value), pager);
+		Pager pager = this.createPager(currentPage, pageSize);
+		return this.query(c, Cnd.where(column, "=", value), pager);
 	}
 
 	/**
@@ -452,12 +420,12 @@ public class BasicDao {
 	 * @return T
 	 */
 	public <T> T findByCondition(Class<T> c, String fileName, String value) {
-		return dao.fetch(c, Cnd.where(fileName, "=", value));
+		return this.fetch(c, Cnd.where(fileName, "=", value));
 	}
 
 	public <T> T findByCondition(Class<T> c, String fileName, String value, String fixreg) {
 		T t = findByCondition(c, fileName, value);
-		return dao.fetchLinks(t, fixreg);
+		return this.fetchLinks(t, fixreg);
 	}
 
 	/**
@@ -471,7 +439,7 @@ public class BasicDao {
 	 * @return T
 	 */
 	public <T> T saveWidth(T t, String fieldName) {
-		return dao.insertWith(t, fieldName);
+		return this.insertWith(t, fieldName);
 
 	}
 
@@ -486,7 +454,7 @@ public class BasicDao {
 	 * @return T
 	 */
 	public <T> T findLink(T t, String fieldName) {
-		return dao.fetchLinks(t, fieldName);
+		return this.fetchLinks(t, fieldName);
 	}
 
 	/**
@@ -500,7 +468,7 @@ public class BasicDao {
 	 * @return T
 	 */
 	public <T> T updateWidth(T t, String fieldName) {
-		return dao.updateWith(t, fieldName);
+		return this.updateWith(t, fieldName);
 	}
 
 	/**
@@ -514,7 +482,7 @@ public class BasicDao {
 	 * @return T
 	 */
 	public <T> T updateLink(T t, String fieldName) {
-		return dao.updateLinks(t, fieldName);
+		return this.updateLinks(t, fieldName);
 	}
 
 	/**
@@ -527,7 +495,7 @@ public class BasicDao {
 	 *            关联的对象
 	 */
 	public <T> void deleteWidth(T t, String fieldName) {
-		dao.deleteWith(t, fieldName);
+		this.deleteWith(t, fieldName);
 	}
 
 	/**
@@ -540,7 +508,7 @@ public class BasicDao {
 	 *            删除的关联对象
 	 */
 	public <T> void deleteLink(T t, String fieldName) {
-		dao.deleteLinks(t, fieldName);
+		this.deleteLinks(t, fieldName);
 	}
 
 	/**
@@ -551,7 +519,7 @@ public class BasicDao {
 	 * @param fieldName
 	 */
 	public <T> T saveRelation(T t, String fieldName) {
-		return dao.insertRelation(t, fieldName);
+		return this.insertRelation(t, fieldName);
 	}
 
 	/**
@@ -563,25 +531,7 @@ public class BasicDao {
 	 * @return
 	 */
 	public <T> T saveLink(T t, String fieldName) {
-		return dao.insertLinks(t, fieldName);
-	}
-
-	/**
-	 * 更新对象的多对多关系
-	 * 
-	 * @param <T>
-	 * @param c
-	 *            更新的对象的类
-	 * @param fieldName
-	 *            更新的字段名称
-	 * @param chain
-	 *            更新的内容
-	 * @param condition
-	 *            更新的条件
-	 * @return true 成功,false 失败
-	 */
-	public <T> boolean updateRelation(Class<T> c, String fieldName, Chain chain, Condition condition) {
-		return dao.updateRelation(c, fieldName, chain, condition) > 0;
+		return this.insertLinks(t, fieldName);
 	}
 
 	/**
@@ -593,7 +543,7 @@ public class BasicDao {
 	 * @return
 	 */
 	public <T> T clearRelation(T t, String fieldName) {
-		return dao.clearLinks(t, fieldName);
+		return this.clearLinks(t, fieldName);
 	}
 
 	/**
@@ -620,9 +570,9 @@ public class BasicDao {
 	 */
 	public <T> List<T> searchByRelation(Class<T> c, String joinTabel, String cloumnName, Condition condition, SqlExpressionGroup group, String orderby,
 			int currentPage, int pageSize) {
-		Entity<T> entity = dao.getEntity(c);
+		Entity<T> entity = this.getEntity(c);
 
-		List<Record> records = dao.query(joinTabel, condition, null);
+		List<Record> records = this.query(joinTabel, condition, null);
 
 		List<Integer> ids = new ArrayList<Integer>();
 		for (Record r : records) {
@@ -633,69 +583,21 @@ public class BasicDao {
 			return null;
 		}
 
-		Pager pager = dao.createPager(currentPage, pageSize);
+		Pager pager = this.createPager(currentPage, pageSize);
 
 		SqlExpression e = Cnd.exp(entity.getIdField().getColumnName(), "in", Castors.me().castTo(ids, int[].class));
 
 		ids = null;
 
-		return dao.query(c, Cnd.where(group.and(e)).desc(orderby), pager);
+		return this.query(c, Cnd.where(group.and(e)).desc(orderby), pager);
 	}
 
-	/**
-	 * 查询数据的总数
-	 * 
-	 * @param <T>
-	 * @param c
-	 * @param joinTabel
-	 *            中间表
-	 * @param cloumnName
-	 *            要获取中间表的字段
-	 * @param condition
-	 *            查询条件
-	 * @param group
-	 *            主查询条件组
-	 * @param orderby
-	 *            排序方式
-	 * @return
-	 */
-	public <T> int searchCount(Class<T> c, String joinTabel, String cloumnName, Condition condition, SqlExpressionGroup group, String orderby) {
-		Entity<T> entity = dao.getEntity(c);
-
-		List<Record> records = dao.query(joinTabel, condition, null);
-
-		List<Integer> ids = new ArrayList<Integer>();
-		for (Record r : records) {
-			int id = r.getInt(cloumnName);
-			ids.add(id);
-		}
-		if (ids.size() == 0) {
-			return 0;
-		}
-
-		SqlExpression e = Cnd.exp(entity.getIdField().getColumnName(), "in", Castors.me().castTo(ids, int[].class));
-
-		group = group.and(e);
-
-		return dao.count(c, Cnd.where(group).desc(orderby));
+	public List<Record> findListByCondition(String tableName, Condition condition) {
+		List<Record> query = this.query(tableName, condition);
+		return query;
 	}
 
-	
-	public void delete(String table, Condition condition) {
-		dao.clear(table, condition);
-	}
-	
-	public Record findByCondition(String tableName, Condition condition){
-		List<Record> query = dao.query(tableName, condition) ;
-		if(query==null||query.size()==0){
-			return null ;
-		}
-		return query.get(0); 
-	}
-	
-	
-	public List<Record> findListByCondition(String tableName, Condition condition){
-		List<Record> query = dao.query(tableName, condition) ;
-		return query ;
+	public void execute(String sql) {
+		super.execute(Sqls.create(sql));
 	}
 }

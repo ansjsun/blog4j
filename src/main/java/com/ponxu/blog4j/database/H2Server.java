@@ -1,23 +1,18 @@
 package com.ponxu.blog4j.database;
 
-import java.net.InetAddress;
-import java.net.InterfaceAddress;
 import java.net.UnknownHostException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import org.h2.tools.Server;
-import org.h2.util.Utils;
-
-import com.ponxu.blog4j.Config;
 
 public class H2Server {
-	private Server server;
-	
-	public void startServer() {
+	private static Server server;
+
+	public static void startServer() {
+
+		if (server != null && server.isRunning(true)) {
+			return;
+		}
 		try {
 			System.out.println("正在启动h2...");
 			server = Server.createTcpServer().start();
@@ -28,7 +23,7 @@ public class H2Server {
 		}
 	}
 
-	public void stopServer() {
+	public static void stopServer() {
 		if (server != null) {
 			System.out.println("正在关闭h2...");
 			server.stop();
